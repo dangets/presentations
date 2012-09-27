@@ -1,6 +1,10 @@
 CUDA Thrust
 ===========
 
+Danny George
+
+.fx: titleslide
+
 ---
 
 What is Thrust?
@@ -66,7 +70,7 @@ std::vector
 The vector template is meant to replace C's arrays.  C arrays are basically
 typed pointers.  These arrays have no notion of length, they are just pointers.
 If you need to store more elements than allocated, you have to manually reallocate
-memory and move the original contents.
+memory and move the original elements.
 
 The vector template does keep track of its length, and it takes care of memory
 management behind the scenes when needed.  The elements are guaranteed to be stored
@@ -93,7 +97,7 @@ C
     !c
     int myset[10];
 
-    // using looping logic
+    // using looping and indexes
     for (int i=0; i<10; ++i) {
         myset[i] *= 2;
     }
@@ -103,9 +107,8 @@ C
     // using pointer arithmetic
     int *cur = myset;
     int *end = myset + 10;
-    while (cur != end) {
+    for (; cur != end; ++cur) {
         *cur *= 2;
-        cur++;
     }
 
 ---
@@ -113,8 +116,8 @@ C
 Iterator logic
 ==============
 
-Let's talk about looping over elements in a collection.  
-How about we multiply a set of numbers by 2.
+Now the same thing in C++.
+Multiply a set of numbers by 2.
 
 C++
 ---
@@ -122,7 +125,7 @@ C++
     !cpp
     std::vector<int> myset(10);
 
-    // using looping logic
+    // using looping and indexes
     for (int i=0; i<10; ++i) {
         myset[i] *= 2;
     }
@@ -143,12 +146,14 @@ Iterator logic
 So what do STL iterators give us?  **Flexibility!**
 
 Iterating through vectors isn't that impressive, but the _exact same_
-logic will work for containers that aren't contiguous in memory,
-(list, map, set, ...) so called "random-access" containers.
+logic will work for containers that aren't contiguous in memory
+(list, map, set, ...)
 
-You can also build "infinite" classes that may have no end.
+You can also build iterators that aren't part of any container at all.
+Counting iterators can take a single number and will keep returning
+a never ending set of numbers.
 
-...but let's keep sticking with vectors.
+...but let's keep sticking with vectors for now.
 
 ---
 
@@ -342,9 +347,9 @@ Thrust provides two vector template containers:
 **`thrust::host_vector`**   uses memory on the host
 **`thrust::device_vector`** uses memory on the device (GPU)
 
-That's it.  
+But wait, there's more!
+=======================
 
-...still here?  Fine, I guess I have more.
 
 Back to the beginning:  
 _Thrust is a parallel algorithms library designed similar to C++'s STL,
@@ -619,5 +624,9 @@ Use immutable/const data whenever possible to minimize errors.
 There are some tasks that may be unsuited for Thrust's algorithms,
 but you can always fall back to raw CUDA if you need to and intermix
 them.
+
+And remember - if you are currently using CUDA, you probably already
+have Thrust installed.  You don't need to do anything special, you still use
+`nvcc` to compile everything.
 
 [http://thrust.github.com](http://thrust.github.com)

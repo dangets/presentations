@@ -273,29 +273,29 @@ body.three-d div.slides {
 /* Content */
 
 header:not(:only-child) {
-  font-family: "Lucida Grande", "Trebuchet MS", Verdana, sans-serif;
-  font-weight: normal;
-  font-size: 50px;
-  letter-spacing: -.05em;
-  color: black;
-  text-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px;
-  position: absolute;
-  left: 30px;
-  top: 25px;
-  margin: 0;
-  padding: 0;
+    font-family: "Lucida Grande", "Trebuchet MS", Verdana, sans-serif;
+    font-weight: normal;
+    font-size: 50px;
+    letter-spacing: -.05em;
+    color: black;
+    text-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px;
+    position: absolute;
+    left: 30px;
+    top: 25px;
+    margin: 0;
+    padding: 0;
 }
 
 header h1, header h2, header h3, header h4, header h5, header h6 {
-  display: inline;
-  font-size: 100%;
-  font-weight: normal;
-  padding: 0;
-  margin: 0;
+    display: inline;
+    font-size: 100%;
+    font-weight: normal;
+    padding: 0;
+    margin: 0;
 }
 
 header h2:first-child {
-  margin-top: 0;
+    margin-top: 0;
 }
 
 section, .slide header:only-child h1 {
@@ -308,6 +308,16 @@ section, .slide header:only-child h1 {
   display: block;
   overflow: hidden;
 }
+
+/* titleslide: displaying a title(h1) and subtitle(h2) on the same slide */
+
+div.titleslide h1 {
+    padding-top: 140px;
+    font-size: 80px;
+    font-weight: bold;
+}
+
+
 
 img { display: block; margin: auto; }
 
