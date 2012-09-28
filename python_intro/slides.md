@@ -12,7 +12,6 @@ What is Python?
 
 **Python is a dynamic, interpreted, garbage-collected programming language**
 
-Very portable code, runs on Linux, OSX, Windows  
 The reference interpreter is written in C (CPython), but other interpreters exist:
 
 - Jython (JVM)
@@ -44,6 +43,28 @@ Who uses it?
 
 ---
 
+What do people like about it?
+=============================
+
+Simple, easy, readable syntax.  
+The language "gets out of the way" and let's you program.
+
+There are standard libraries for the most common operations.
+
+Very, _very_ high programmer productivity (fast development turn around).
+
+Fast execution speed.
+
+Excellent documentation.
+
+Supports multiple programming styles (OO, imperative, functional, ...).
+
+Interfaces with C (and everything else through that).
+
+Very portable code; runs on Linux, OSX, Windows, ...
+
+---
+
 Python is Dynamic
 =================
 
@@ -62,8 +83,10 @@ Python:
     x = 10
     x = "Python is awesome!"
 
+**DEMO**
+
 Python also allows for object introspection.  That is, you can look at an object
-to see what it is capable of during runtime. **DEMO**
+to see what it is capable of during runtime.
 
 ---
 
@@ -83,7 +106,6 @@ output:
     the current date and time is: 2012-09-25 22:34:08.867020
 
   
-
 There is no manual compilation step, which creates a rapid development cycle.
 
 Modules will be compiled to byte-code files (`.pyc`)
@@ -316,8 +338,8 @@ Python:
 Syntax
 ======
 
-Python eliminates many braces and semicolons.
-It is good to have only one operation per line.  
+Python eliminates many braces and semicolons.  
+Don't try to be too clever, it's good to have only one operation per line.  
 IMHO This makes code much easier to read, and faster to write.  
 (also, no arguing over the one true "brace style")
 
@@ -327,8 +349,7 @@ C/C++/Java:
     if (x)
     {
         if (y) {
-            do_something1();
-            do_something2();
+            do_something1(); do_something2();
         }
         do_something3();
     }
@@ -341,6 +362,33 @@ Python:
             do_something1()
             do_something2()
         do_something3()
+
+---
+
+Syntax - Loops
+==============
+
+Python has the familiar while loop, useful for counters and the like
+
+    !python
+    x = 0
+    while x < 10:
+        # do something imporant
+        x += 1
+
+In C/C++/Java, the `for` loop is essentially a convenient while loop.  
+In Python the for loop is used to iterate over collections or generators  
+(which is usually what you are doing with C/C++/Java for loops.)
+
+    !python
+    l = [10.5, 22.0, 3.5, 4.2, 5.5]
+    sum = 0
+    for x in l:
+        sum += x
+
+    # if you need the index as well use 'enumerate'
+    for i, x in enumerate(l):
+        sum += x * i
 
 ---
 
@@ -407,8 +455,6 @@ The standard convention is to use the name `args`.
     sum(10)         # returns 10
     sum()           # returns 0
 
-Introducing the `for` loop!
-
 ---
 
 Functions - Keyword Args
@@ -448,6 +494,7 @@ attitude of the standard libraries.
 There are many modules/libraries available in the default installation that
 you can string together to solve problems very quickly.
 
+- string processing
 - network / socket programming  
 - database apis  
 - GUI builders  
@@ -503,6 +550,10 @@ Questions?
 ==========
 
 Resources:
+
+**ipython** - better interactive Python shell (comes with scipy)
+
+[**PEP8**](http://www.python.org/dev/peps/pep-0008/) - Python official suggested style guide
 
 - [http://python.org](http://python.org)
 - [http://docs.python.org/py3k/](http://docs.python.org/py3k/)
