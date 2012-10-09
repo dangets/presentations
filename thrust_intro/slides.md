@@ -20,16 +20,16 @@ already have it on your computer).
 Thrust source is also available on github, and is distributed under the
 Apache license.
 
-But forget about all that for now...
+But forget about all of that for now...
 
 ---
 
-Let's back up - C++ templates
+Let's learn about C++!
 =============================
 
 (If you already know the C++ STL, you now get to sit through a review.)
 
-One major driving feature of C++ are its templates and the STL library.  
+One driving feature of C++ are its templates and the STL library.  
 C++11 is further pushing these ideas and shows no sign of slowing.
 
 Templates/Generic programming is used to write **type-safe** functions where
@@ -70,12 +70,12 @@ std::vector
 The vector template is designed to replace C's arrays.
 
 Arrays in C are basically typed pointers.  They have no notion of length,
-they are just pointers.  If you need to store more elements than allocated, you
+*they are just pointers*.  If you need to store more elements than initially allocated, you
 have to manually reallocate memory and move the original elements.
 
-The `vector` template does keep track of its length, and it takes care of memory
-management behind the scenes when needed.  The elements are guaranteed to be stored
-contiguously, so it is every bit as efficient as a basic C array.
+The `std::vector` template does keep track of its length, and it also takes care of memory
+management behind the scenes upon demand.  Its elements are guaranteed to be stored
+contiguously, so it is every bit as efficient as a C array.
 
     !cpp
     std::vector<int> my_ints(4, 100);   // four ints with value 100
@@ -159,7 +159,7 @@ You can also create iterators that aren't part of any memory-backed container at
 - Constant iterators take a single number and can keep returning that
   same number forever.
 
-...but let's keep sticking with `vector`s for now.
+...but let's keep using regular `vector`s and their iterators for now.
 
 ---
 
@@ -624,7 +624,7 @@ It may be difficult to shoehorn some structures into `vector` form -
 fallback to CUDA in those parts when necessary.
 
 When working with more than 2 input vectors to an algorithm, you often
-have to work with zip iterators - not difficult, but it is a bit tedious.
+have to work with zip iterators - not difficult, but does get a bit tedious.
 This is required to maintain compile time type safety.
 
 ---
@@ -632,17 +632,16 @@ This is required to maintain compile time type safety.
 Closing Thoughts
 =================
 
-Strive towards programming _"what you want done"_, and not
-_"how you want it done"_.  This is only to get more important
-in the coming future.
+For portability and flexibility, strive towards programming _"what you want
+done"_, and not _"how you want it done"_.  This is only going to get more important
+in the heterogeneous CPU/GPU computing future.
 
 Be aware of the memory operations that are going on.  
 To make CUDA/GPU computing "worth it" you have to have enough
-number crunching to outweigh the memory ops.
+number crunching speedup to outweigh the memory transfers.
 
 There are some tasks that may be unsuited for Thrust's algorithms,
-but you can always fall back to raw CUDA if you need to and intermix
-them.
+but you can always fall back to raw CUDA if needed and intermix the two styles.
 
 When writing parallel functions, be aware of possible race conditions.  
 Use immutable/const data whenever possible to minimize errors.
