@@ -59,7 +59,7 @@ Besides the OO features and convenience, these containers are designed to
 rise-above basic C pointers, providing more safety from memory violations,
 while maintaining the bare-metal performance.
 
-I'm going to use std::vector from here on out, but the operations should
+I'm going to focus on `std::vector` from here on out, but the operations should
 work for most of the other containers as well.
 
 ---
@@ -67,12 +67,13 @@ work for most of the other containers as well.
 std::vector
 -----------
 
-The vector template is meant to replace C's arrays.  C arrays are basically
-typed pointers.  These arrays have no notion of length, they are just pointers.
-If you need to store more elements than allocated, you have to manually reallocate
-memory and move the original elements.
+The vector template is designed to replace C's arrays.
 
-The vector template does keep track of its length, and it takes care of memory
+Arrays in C are basically typed pointers.  They have no notion of length,
+they are just pointers.  If you need to store more elements than allocated, you
+have to manually reallocate memory and move the original elements.
+
+The `vector` template does keep track of its length, and it takes care of memory
 management behind the scenes when needed.  The elements are guaranteed to be stored
 contiguously, so it is every bit as efficient as a basic C array.
 
@@ -96,6 +97,7 @@ C
 
     !c
     int myset[10];
+    // ... initialize myset ...
 
     // using looping and indexes
     for (int i=0; i<10; ++i) {
@@ -116,7 +118,7 @@ C
 Iterator logic
 ==============
 
-Now the same thing in C++.
+Now the same thing in C++ using a `std::vector`.  
 Multiply a set of numbers by 2.
 
 C++
@@ -124,6 +126,7 @@ C++
 
     !cpp
     std::vector<int> myset(10);
+    // ... initialize myset ...
 
     // using looping and indexes
     for (int i=0; i<10; ++i) {
@@ -134,7 +137,7 @@ C++
 
     // using STL iterators
     std::vector<int>::iterator it;
-    for (it=myset.begin(); it!=myset.end(); ++it) {
+    for (it = myset.begin(); it != myset.end(); ++it) {
         *it *= 2;
     }
 
@@ -146,21 +149,24 @@ Iterator logic
 So what do STL iterators give us?  **Flexibility!**
 
 Iterating through vectors isn't that impressive, but the _exact same_
-logic will work for containers that aren't contiguous in memory
-(list, map, set, ...)
+logic will work for containers that aren't contiguous in memory.  
+`(list, map, set, ...)`
 
-You can also build iterators that aren't part of any container at all.
-Counting iterators can take a single number and will keep returning
-a never ending set of numbers.
+You can also create iterators that aren't part of any memory-backed container at all.
 
-...but let's keep sticking with vectors for now.
+- Counting iterators take a single number and can keep returning
+  a never ending incrementing set of numbers.  
+- Constant iterators take a single number and can keep returning that
+  same number forever.
+
+...but let's keep sticking with `vector`s for now.
 
 ---
 
 STL algorithms
 ==============
 
-OK, we have some generic "begin" and "end" to our collections as well
+OK, we have a generic "begin" and "end" to our collections as well
 as a way to iterate from one end to the other.
 
 Here's where smart people came up with the idea of building generic
@@ -235,12 +241,11 @@ that can be called and treated just like a regular function.  Let's see an examp
 C++ Functors
 ============
 
-OK, so what do functors give us? **LOTS!**  
+OK, so what do functors give us? **LOTS!**
 
 \- We can maintain per-instance state.  
 \- We can pass functors around just like variables.  
 \- Compiler optimizations (vs. function pointers)  
-\- A step towards runtime/dynamic programming, still type-safe and efficient.
 
     !cpp
     class AddX {
@@ -335,17 +340,20 @@ Do not use this as an excuse to not prefer std::vector wherever possible!
 
 ---
 
-Where were we?
-==============
+Am I in the wrong room?
+=======================
 
-I thought this presentation was about CUDA/Thrust.
+I thought this presentation was about CUDA Thrust.
 
-Alright! I'll teach you (almost) everything you need to know to get
-started using Thrust.
+Alright then! Let's learn about Thrust.
 
 Thrust provides two vector template containers:  
 **`thrust::host_vector`**   uses memory on the host
 **`thrust::device_vector`** uses memory on the device (GPU)
+
+Thrust also provides many algorithms modeled after what's in the STL.
+
+That was the learning curve.
 
 But wait, there's more!
 =======================
@@ -388,8 +396,8 @@ With Thrust, let the library do the work for you.
 Thrust - Memory
 ===============
 
-Let's explore some more functionality that Thrust provides to make
-memory operations much easier.
+Let's explore more functionality that Thrust provides to make
+memory operations easier.
 
     !cpp
     thrust::host_vector<int>   h1(10);
@@ -399,7 +407,7 @@ memory operations much easier.
     thrust::device_vector<int> d2(h1)
     thrust::device_vector<int> d3(h1.begin(), h1.begin()+5)
 
-    // remember vectors will grow on demand
+    // remember: vector memory will resize on demand
 
     d1 = h1;    // host to device
     h1 = d1;    // device to host
@@ -418,15 +426,15 @@ Be sure to keep in mind what is actually happening in the background.
     !cpp
     thrust::device_vector<int> d1(65536);
 
-    // the below for loop is OK for quick debugging,
-    //  but is horrendously slow - Why?
+    // the for loop below is OK for quick debugging,
+    //  but is obnoxiously slow - Why?
     for (int i=0; i<d1.size(); ++i) {
         std::cout << d1[i] << std::endl;
     }
 
     // there are d1.size() cudaMemcpy calls being made!
-    // it is usually better to copy the whole vector at once
-    //  or at least large enough chunks into host_vectors
+    // it is usually better to copy the whole vector or 
+    //  decent sized chunks into host_vectors first
 
     thrust::host_vector<int> h1(d1);    // one cudaMemcpy
     thrust::host_vector<int> h2(d1.begin(), d1.begin()+512);
@@ -501,8 +509,8 @@ Thrust - Kernel launching
     thrust::transform(d_src1.begin(), d_src1.end(), d_src2.begin(),
                       d_dst.begin(), addFunc);
 
-Another very cool thing about the Thrust algorithms is that because
-of the magic of C++ templates, you can call the same algorithms
+Another cool thing about the Thrust algorithms is that because
+of the magic of C++ templates, you can use the same algorithms
 on `thrust::host_vectors`!  
 
 When called with a `host_vector` the computation will be done by the CPU,
@@ -522,7 +530,7 @@ and when called with a `device_vector` it will be done by the GPU.
 Thrust - Functors
 =================
 
-OK, so Thrust provides some vectors and some algorithms for me.  But what if
+OK, so Thrust provides some vectors and generic algorithms for me.  But what if
 I want to do **more** than just sort, count, and sum my data?
 
 Well, look at the title of the slide! - You can make your own functors
@@ -562,17 +570,16 @@ Thrust - Functors
     };
 
 Let's look more at that.
-The operator() function is prefixed with `__host__ __device__`
-this is CUDA notation, but to Thrust it means that it can be called
+The `operator()` function is prefixed with `__host__ __device__`.
+This is CUDA compiler notation, but to Thrust it means that it can be called
 with a `host_vector` OR `device_vector`.
 
-There is also a per-instance variable '`a`'.  It is declared `const`
-because it is not being modified (this is pretty common).  If you
-do have a modifiable attribute - be aware of possible data races
-if multiple threads try to read/write to it.
+Also notice that in this form of programming you don't need to worry about
+`threadIdx` and `blockIdx` index calculations in the kernel code.  You can just
+focus on what needs to happen to each element.
 
 There are many excellent Thrust examples (including this saxpy one)
-in the distribution or online.
+in the installed distribution and online.
 
 ---
 
@@ -607,6 +614,21 @@ Thrust algorithms as well.
 
 ---
 
+So what's the bad?
+===================
+
+C++ templates in general cause slower compile times and even small typos can
+create unreadable walls of error messages from the compiler.
+
+It may be difficult to shoehorn some structures into `vector` form -
+fallback to CUDA in those parts when necessary.
+
+When working with more than 2 input vectors to an algorithm, you often
+have to work with zip iterators - not difficult, but it is a bit tedious.
+This is required to maintain compile time type safety.
+
+---
+
 Closing Thoughts
 =================
 
@@ -618,12 +640,12 @@ Be aware of the memory operations that are going on.
 To make CUDA/GPU computing "worth it" you have to have enough
 number crunching to outweigh the memory ops.
 
-When writing parallel functions, be aware of possible race conditions.  
-Use immutable/const data whenever possible to minimize errors.
-
 There are some tasks that may be unsuited for Thrust's algorithms,
 but you can always fall back to raw CUDA if you need to and intermix
 them.
+
+When writing parallel functions, be aware of possible race conditions.  
+Use immutable/const data whenever possible to minimize errors.
 
 And remember - if you are currently using CUDA, you probably already
 have Thrust installed.  You don't need to do anything special, you still use
