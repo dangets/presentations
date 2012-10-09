@@ -206,7 +206,7 @@ I could also change from using a `vector` to a `list`, and it would still work.
 Warning:  blatant foreshadowing ahead
 -------------------------------------
 Do I even care if each number in the set is doubled in parallel?  
-C++11 added a std::parallel\_for\_each algorithm to the STL.
+C++11 added a `std::parallel_for_each` algorithm to the STL.
 
 ---
 
@@ -299,20 +299,20 @@ The STL provides much more than the basic `std::for_each`
 
     !cpp
     std::binary_search(begin, end, value);
-    std::copy(src_begin, src_end, dst_first);
+    std::copy(src_begin, src_end, dst_begin);
     std::count(begin, end, value);
     std::count_if(begin, end, pred);  // pred is a bool functor
     std::fill(begin, end, value);
     std::sort(begin, end, cmp);       // similar to C's qsort
     std::transform(src1_begin, src1_end, dst_begin, unaryOp);
-    std::transform(src1_begin, src1_end, src2_first,
+    std::transform(src1_begin, src1_end, src2_begin,
                     dst_begin, binaryOp);
     // many more...
 
-`std::transform` should be explained more thoroughly.  Note that it
-does not modify the input collection, but stores all results of the
+`std::transform` should be explained more thoroughly.  
+Note that it does not modify the input collection, but stores all results of the
 function into an output collection.  
-If you've ever heard of Map/Reduce, from functional programming, this is the 'Map' function.
+If you've ever heard of Map/Reduce from functional programming, this is the 'Map' function.
 
 ---
 
@@ -484,18 +484,18 @@ familiarity.
     !cpp
     thrust::find(begin, end, value);
     thrust::find_if(begin, end, Predicate);
-    thrust::copy(src_begin, src_end, dst_first);
-    thrust::copy_if(src_begin, src_end, dst_first, Predicate);
+    thrust::copy(src_begin, src_end, dst_begin);
+    thrust::copy_if(src_begin, src_end, dst_begin, Predicate);
     thrust::count(begin, end, value);
     thrust::count_if(begin, end, Predicate);
-    thrust::equal(begin1, end1, begin2);
-    thrust::min_element(first, last, [Cmp])
-    thrust::max_element(first, last, [Cmp])
+    thrust::equal(src1_begin, src1_end, src2_begin);
+    thrust::min_element(begin, end, [Cmp])
+    thrust::max_element(begin, end, [Cmp])
     thrust::merge(src1_begin, src1_end, src2_begin, src2_end, dst_begin);
-    thrust::sort(first, last, [Cmp])
+    thrust::sort(begin, end, [Cmp])
     // Map/Reduce   (transform === map)
     thrust::transform(src1_begin, src1_end, src2_begin,
-                        dst_begin, Func);
+                        dst_begin, BinaryOp);
     thrust::reduce(begin, end, init, BinaryOp);
     // ... and many more ...
 
@@ -621,10 +621,12 @@ C++ templates in general cause slower compile times and even small typos can
 create unreadable walls of error messages from the compiler.
 
 It may be difficult to shoehorn some structures into `vector` form -
-fallback to CUDA in those parts when necessary.
+fallback to CUDA in those parts when necessary.  
+For example, problems where you need to know your current index/position,
+such as image processing or matrix multiplication.
 
 When working with more than 2 input vectors to an algorithm, you often
-have to work with zip iterators - not difficult, but does get a bit tedious.
+have to work with `zip_iterator`s - not difficult, but does get a bit tedious.
 This is required to maintain compile time type safety.
 
 ---
